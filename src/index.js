@@ -1,5 +1,5 @@
 const express = require("express")
-const route = require("./route/route")
+const route = require("./routes/route")
 // const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 const { default: mongoose } = require('mongoose')
