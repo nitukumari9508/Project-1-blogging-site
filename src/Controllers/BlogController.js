@@ -1,6 +1,6 @@
-const { idValidObjectId } = require("mongoose")
-const AuthorModel = require("../models/authorModel")
-const BlogsModel = require("../models/blogsModel")
+const { isValidObjectId } = require("mongoose")
+const AuthorModel = require("../Models/authorModel")
+const BlogsModel = require("../Models/blogModel")
 
 const createBlog = async function(req, res){
 try {
@@ -13,7 +13,7 @@ try {
 
     if(!authorId) return res.status(400).send({status: false , msg: "AuthorId is required."})
 
-    let isValidAuthorId = idValidObjectId(authorId)
+    let isValidAuthorId = isValidObjectId(authorId)
 
     if(!isValidAuthorId) return res.status(400).send({status: false , msg: "AuthorId is not a valid ObjectId."})
 
@@ -24,8 +24,8 @@ try {
     let createdBlog = await BlogsModel.create(data)
 
     res.status(201).send({ status : true , data : createdBlog })
-} catch {
-    res.status().send
+} catch (err) {
+    res.status(500).send(err.message)
 }
 }
 

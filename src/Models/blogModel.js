@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const objectId= mongoose.Schema.Types.objectId
+const ObjectId= mongoose.Schema.Types.ObjectId
 
 const blogSchema = new mongoose.Schema({
     title:{
@@ -11,9 +11,9 @@ const blogSchema = new mongoose.Schema({
         required:true
     },
     authorId:{
+        type: ObjectId,
         required:true,
-        ref: author,
-        type:objectId
+        ref: 'author'
     },
     tags:[],
     category:{
@@ -29,9 +29,10 @@ const blogSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    DeletedAt: Date,
     publishedAt:{
         type:Date,
-        default:null
+        default: new Date()
     }
 
 
