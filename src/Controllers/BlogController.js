@@ -29,4 +29,20 @@ try {
 }
 }
 
+const getBlogs = async function(req,res) {
+    filters=req.query
+    filters.isDeleted = false
+    filters.ispublished = true
+    
+   data = await BlogsModel.find(filters)
+   if(data.length==0){
+    res.status(404).send({status:false,msg:"No blogs found"})
+   }
+   res.status(200).send({status:true,Data:data})
+}
+
+module.exports.getBlogs=getBlogs
+
+
+
 module.exports.createBlog = createBlog
