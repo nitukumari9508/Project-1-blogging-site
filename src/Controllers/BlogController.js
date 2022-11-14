@@ -30,6 +30,9 @@ try {
 }
 
 const getBlogs = async function(req,res) {
+
+    try{
+
     filters=req.query
     filters.isDeleted = false
     filters.ispublished = true
@@ -39,6 +42,9 @@ const getBlogs = async function(req,res) {
     res.status(404).send({status:false,msg:"No blogs found"})
    }
    res.status(200).send({status:true,Data:data})
+}catch(error){
+    res.status(400).send({msg:error.message})
+}
 }
 
 module.exports.getBlogs=getBlogs
