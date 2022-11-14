@@ -1,0 +1,27 @@
+{
+  "name": "project-1-bloggingsite",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kfarzan13/Project-1-BloggingSite.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kfarzan13/Project-1-BloggingSite/issues"
+  },
+  "homepage": "https://github.com/kfarzan13/Project-1-BloggingSite#readme",
+  "description": "",
+  
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.2",
+    "nodemon": "^2.0.20"
+  }
+}
