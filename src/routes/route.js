@@ -3,14 +3,20 @@ const router = express.Router()
 const authorControllers = require("../Controllers/AuthorController")
 const BlogControllers = require("../Controllers/BlogController")
 
+// API to create new author
 
-router.get("/test-me", function (req,res){
-    res.send("Hii")
-})
 router.post("/authors",authorControllers.authors)
+
+// API to create new blog
 
 router.post("/blogs",BlogControllers.createBlog)
 
+// API to find blogs
+
 router.get("/getBlogs",BlogControllers.getBlogs)
+
+// API to update blogs
+
+router.put("/updateBlogs/:blogId",BlogControllers.updateBlogs)
 
 module.exports = router

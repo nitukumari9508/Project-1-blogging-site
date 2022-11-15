@@ -7,9 +7,9 @@ try {
     
     let data = req.body
     let authorId = req.body.authorId
-    // let { title , body , authorId , tags , category , subcategory } = req.body
+    let { title , body , tags , category , subcategory } = req.body
 
-    // if(!title || !body || !authorId || !tags || !category || !subcategory) return res.status(400).send({status: false , msg: "All fields are mandatory."})
+    if(!title || !body || !tags || !category || !subcategory) return res.status(400).send({status: false , msg: "All fields are mandatory."})
 
     if(!authorId) return res.status(400).send({status: false , msg: "AuthorId is required."})
 
@@ -30,19 +30,34 @@ try {
 }
 
 const getBlogs = async function(req,res) {
-    filters=req.query
+
+    let filters=req.query
+
     filters.isDeleted = false
     filters.ispublished = true
     
-   data = await BlogsModel.find(filters)
-   if(data.length==0){
-    res.status(404).send({status:false,msg:"No blogs found"})
-   }
-   res.status(200).send({status:true,Data:data})
+    let data = await BlogsModel.find(filters)
+    if(data.length==0){
+    return res.status(404).send({status:false,msg:"No blogs found"})
+    }
+    res.status(200).send({status:true,Data:data})
+}
+
+const updateBlogs = async function(req,res){
+    let blogId = req.params.blogId
+    let { title , body , tags , category , subcategory } = req.body
+
+    if(!blogId) return res.send.status(400).send({ status : false , msg : "BlogId is required." })
+
+    let isavailable = await BlogsModel.findOne({_id : blogId , isDeleted : false})
+
+    if(!isavailable) return res.status(404).send({ status : false , msg : "BlogId not available." })
+
+    let updatedData = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set:  { publishedAt : new Date() } , ispublished : true , title : title ,  body : body  , category : category ,  $push: { tags : tags , subcategory : subcategory}   } , { new : true })
+
+    res.status(200).send({ status : true , data : updatedData })
 }
 
 module.exports.getBlogs=getBlogs
-
-
-
 module.exports.createBlog = createBlog
+module.exports.updateBlogs = updateBlogs

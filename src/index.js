@@ -1,12 +1,8 @@
 const express = require("express")
-const route = require("./routes/route")
-// const mongoose = require("mongoose")
+const app = express()
 const bodyParser = require("body-parser")
 const { default: mongoose } = require('mongoose')
-const port = 3000
-
-
-const app = express()
+const route = require("./routes/route")
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
@@ -20,6 +16,6 @@ mongoose.connect("mongodb+srv://AbhinavSIngh:9936522959@cluster0.wtmx5b4.mongodb
 .catch( err => console.log(err))
 
 app.use('/',route)
-app.listen(port,function()
-{console.log("express app running on the port 3000")})
 
+app.listen(3000,function()
+{console.log("express app running on the port 3000")})

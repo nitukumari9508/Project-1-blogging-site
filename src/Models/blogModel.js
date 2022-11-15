@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ObjectId= mongoose.Schema.Types.ObjectId
+const ObjectId = mongoose.Schema.Types.ObjectId
 
 const blogSchema = new mongoose.Schema({
     title:{
@@ -34,8 +34,6 @@ const blogSchema = new mongoose.Schema({
         type:Date,
         default: new Date()
     }
-
-
 },{timestamps : true});
 
 module.exports = mongoose.model('blog', blogSchema)

@@ -15,17 +15,15 @@ const authorSchema = new mongoose.Schema({
         enum: ["Mr","Mrs","Miss"]
     },
     Email:{
+        type: String,
         required: true,
-        unique: true,
-        type: String
-
+        unique: true
     },
     password:{
         type: String,
         required : true
     }
+}, {timestamps: true });
 
-    }, {timestamps: true });
-
-    module.exports = mongoose.model('author', authorSchema)
+module.exports = mongoose.model('author', authorSchema)
 
