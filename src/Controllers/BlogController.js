@@ -40,7 +40,7 @@ const getBlogs = async function(req,res) {
     
     let data = await BlogsModel.find(filters)
     if(data.length==0){
-    return res.status(404).send({status:false,msg:"No blogs found"})
+    return res.status(404).send({status:false,msg:"Blog is not available."})
     }
     res.status(200).send({status:true,Data:data})
 } catch (err) {
@@ -58,7 +58,7 @@ const updateBlogs = async function(req,res){
 
     let isavailable = await BlogsModel.findOne({_id : blogId , isDeleted : false})
 
-    if(!isavailable) return res.status(404).send({ status : false , msg : "BlogId not available." })
+    if(!isavailable) return res.status(404).send({ status : false , msg : "Blog is not available." })
 
     let updatedData = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set:  { publishedAt : new Date() } , ispublished : true , title : title ,  body : body  , category : category ,  $push: { tags : tags , subcategory : subcategory}   } , { new : true })
 
@@ -76,9 +76,9 @@ try {
 
     if(!blogId) return res.status(400).send({ status : false , msg : "BlogId is required." })
 
-    let isavailable = await BlogsModel.findById(blogId)
+    let isavailable = await BlogsModel.findOne({_id : blogId , isDeleted : false})
 
-    if(isavailable.isDeleted === true) return res.status(200).send({ status : false , msg : "BlogId is already deleted." })
+    if(!isavailable) return res.status(200).send({ status : false , msg : "Blog is not available." })
 
     let deletedBlog = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set : {isDeleted : true , DeletedAt : new Date()}} , { new : true } )
 
@@ -100,7 +100,7 @@ const deBlogsQ = async function (req, res) {
         
         if (!ub) { return res.status(404).send({ status: false, msg: "not found" }) }
         res.status(200).send({ msg: "we will miss you" })
-    } catch (error) { res.status(500).send({ status : false , msg : error.message }) }
+    } catch (err) { res.status(500).send({ status : false , msg : err.message }) }
 }
 
 module.exports.deBlogsQ = deBlogsQ
