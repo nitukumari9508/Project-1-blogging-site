@@ -89,7 +89,22 @@ try {
 }
 }
 
-module.exports.getBlogs=getBlogs
+const deBlogsQ = async function (req, res) {
+    try {
+        let filters = req.query
+        let ub = await BlogsModel.updateMany(
+            filters,
+            { isDeleted: true, DeletedAt: new Date() },
+            { new: true }
+        )
+        
+        if (!ub) { return res.status(404).send({ status: false, msg: "not found" }) }
+        res.status(200).send({ msg: "we will miss you" })
+    } catch (error) { res.status(500).send({ status : false , msg : error.message }) }
+}
+
+module.exports.deBlogsQ = deBlogsQ
+module.exports.getBlogs = getBlogs
 module.exports.createBlog = createBlog
 module.exports.updateBlogs = updateBlogs
 module.exports.deleteBlog = deleteBlog
