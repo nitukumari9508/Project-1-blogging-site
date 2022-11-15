@@ -25,12 +25,14 @@ try {
 
     res.status(201).send({ status : true , data : createdBlog })
 } catch (err) {
-    res.status(500).send(err.message)
+    res.status(500).send({ status : false , msg : err.message })
 }
 }
 
 const getBlogs = async function(req,res) {
 
+    try{
+        
     let filters=req.query
 
     filters.isDeleted = false
@@ -41,9 +43,14 @@ const getBlogs = async function(req,res) {
     return res.status(404).send({status:false,msg:"No blogs found"})
     }
     res.status(200).send({status:true,Data:data})
+} catch (err) {
+    res.status(500).send({ status : false , msg : err.message })
+}
 }
 
 const updateBlogs = async function(req,res){
+    try {
+    
     let blogId = req.params.blogId
     let { title , body , tags , category , subcategory } = req.body
 
@@ -56,8 +63,33 @@ const updateBlogs = async function(req,res){
     let updatedData = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set:  { publishedAt : new Date() } , ispublished : true , title : title ,  body : body  , category : category ,  $push: { tags : tags , subcategory : subcategory}   } , { new : true })
 
     res.status(200).send({ status : true , data : updatedData })
+} catch (err) {
+    res.status(500).send({ status : false , msg : err.message })
+}
+}
+
+const deleteBlog = async function(req,res){
+
+try {
+
+    let blogId = req.params.blogId
+
+    if(!blogId) return res.status(400).send({ status : false , msg : "BlogId is required." })
+
+    let isavailable = await BlogsModel.findById(blogId)
+
+    if(isavailable.isDeleted === true) return res.status(200).send({ status : false , msg : "BlogId is already deleted." })
+
+    let deletedBlog = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set : {isDeleted : true , DeletedAt : new Date()}} , { new : true } )
+
+    res.status(200).send({ status : true , data : deletedBlog })
+
+} catch (err) {
+    res.status(500).send({ status : false , msg : err.message })
+}
 }
 
 module.exports.getBlogs=getBlogs
 module.exports.createBlog = createBlog
 module.exports.updateBlogs = updateBlogs
+module.exports.deleteBlog = deleteBlog
