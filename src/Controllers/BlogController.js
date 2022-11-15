@@ -31,6 +31,7 @@ try {
 
 const getBlogs = async function(req,res) {
 
+<<<<<<< HEAD
     let filters=req.query
 
     filters.isDeleted = false
@@ -56,6 +57,22 @@ const updateBlogs = async function(req,res){
     let updatedData = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set:  { publishedAt : new Date() } , ispublished : true , title : title ,  body : body  , category : category ,  $push: { tags : tags , subcategory : subcategory}   } , { new : true })
 
     res.status(200).send({ status : true , data : updatedData })
+=======
+    try{
+
+    filters=req.query
+    filters.isDeleted = false
+    filters.ispublished = true
+    
+   data = await BlogsModel.find(filters)
+   if(data.length==0){
+    res.status(404).send({status:false,msg:"No blogs found"})
+   }
+   res.status(200).send({status:true,Data:data})
+}catch(error){
+    res.status(400).send({msg:error.message})
+}
+>>>>>>> c192922ae0f928e4b98bad0aa58afdc6fd9cca9b
 }
 
 module.exports.getBlogs=getBlogs
