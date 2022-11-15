@@ -19,4 +19,8 @@ router.get("/getBlogs",BlogControllers.getBlogs)
 
 router.put("/updateBlogs/:blogId",BlogControllers.updateBlogs)
 
+// API to delete blogs
+
+router.delete("/blogs/:blogId",BlogControllers.deleteBlog)
+
 module.exports = router
