@@ -78,7 +78,7 @@ try {
 
     let isavailable = await BlogsModel.findOne({_id : blogId , isDeleted : false})
 
-    if(!isavailable) return res.status(200).send({ status : false , msg : "Blog is not available." })
+    if(!isavailable) return res.status(404).send({ status : false , msg : "Blog is not available." })
 
     let deletedBlog = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set : {isDeleted : true , DeletedAt : new Date()}} , { new : true } )
 
@@ -92,14 +92,13 @@ try {
 const deBlogsQ = async function (req, res) {
     try {
         let filters = req.query
-        let ub = await BlogsModel.updateMany(
-            filters,
-            { isDeleted: true, DeletedAt: new Date() },
-            { new: true }
-        )
+
+        if((Object.keys(filters)).length == 0) return res.status(400).send({ status : false , msg : "filters are required." })
+
+        let ub = await BlogsModel.updateMany(filters,{ isDeleted: true, DeletedAt: new Date() })
         
         if (!ub) { return res.status(404).send({ status: false, msg: "not found" }) }
-        res.status(200).send({ msg: "we will miss you" })
+        res.status(200).send({ msg: "Blog Deleted." })
     } catch (err) { res.status(500).send({ status : false , msg : err.message }) }
 }
 
