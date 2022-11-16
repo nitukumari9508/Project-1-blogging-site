@@ -31,6 +31,6 @@ router.delete("/blogs/:blogId", commonMW.authentication , commonMW.authorization
 
 // API to delete blogs with query params
 
-router.delete("/blogs", commonMW.authentication , commonMW.authorization , BlogControllers.deBlogsQ)
+router.delete("/blogs", commonMW.authentication , BlogControllers.deBlogsQ)
 
 module.exports = router

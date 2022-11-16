@@ -91,11 +91,12 @@ try {
 
 const deBlogsQ = async function (req, res) {
     try {
+        let id = req.loggedInUser
         let filters = req.query
 
         if((Object.keys(filters)).length == 0) return res.status(400).send({ status : false , msg : "filters are required." })
 
-        let ub = await BlogsModel.updateMany(filters,{ isDeleted: true, DeletedAt: new Date() })
+        let ub = await BlogsModel.updateMany({_id : id ,filters},{ isDeleted: true, DeletedAt: new Date() })
         
         if (!ub) { return res.status(404).send({ status: false, msg: "not found" }) }
         res.status(200).send({ msg: "Blog Deleted." })

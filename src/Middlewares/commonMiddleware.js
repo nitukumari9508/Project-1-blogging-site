@@ -18,16 +18,10 @@ if (!token) return res.status(400).send({ status: false, msg: "token must be pre
 const authorization = async function(req , res , next){
     let blogId = req.params.blogId
     let authorId = req.body.authorId
-    let filters = req.query
 
     if(blogId){
         let user = await blogModel.findById(blogId)
         authorId = user.authorId.toString()
-    }
-
-    if(filters){
-        let data = await blogModel.findOne(filters)
-        authorId = data.authorId.toString()
     }
 
     if( authorId !== req.loggedInUser){
