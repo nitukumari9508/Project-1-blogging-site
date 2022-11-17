@@ -29,15 +29,13 @@ const authorization = async function(req , res , next){
     let blogId = req.params.blogId
     let authorId = req.body.authorId
 
-    if(req.query.authorId == undefined) return next()
-
     if(blogId){
         let user = await blogModel.findById(blogId)
         if(!user){return res.status(400).send({status: false, msg: "Blog id is invalid!"})}
         authorId = user.authorId.toString()
     }
 
-    if( authorId !== req.loggedInUser){
+    if( authorId !== req.loggedInUser ){
         console.log(req.loggedInUser)
         return res.status(403).send({status: false, msg: "Not Authorized !!!"})
     } 

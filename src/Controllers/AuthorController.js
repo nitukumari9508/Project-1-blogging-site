@@ -10,7 +10,7 @@ try {
     const {firstname , lastname , title , Email , password} = req.body
 
     if(!firstname) return res.status(400).send({ status: false, message: "Firstname is required." })
-    if(!lastname) return res.status(400).send({ status: false, message: "Lasttitlename is required." })
+    if(!lastname) return res.status(400).send({ status: false, message: "Lastname is required." })
     if(!title) return res.status(400).send({ status: false, message: "Title is required." })
     if(!Email) return res.status(400).send({ status: false, message: "Email is required." })
     if(!password) return res.status(400).send({ status: false, message: "Password is required." })

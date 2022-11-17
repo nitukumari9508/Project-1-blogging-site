@@ -115,9 +115,16 @@ const deBlogsQ = async function (req, res) {
     try {
 
     let filters = req.query
-    filters.authorId=req.loggedInUser
 
     if((Object.keys(filters)).length == 0) return res.status(400).send({ status : false , msg : "filters are required." })
+
+    let { authorId } = filters
+
+    if(authorId) {
+        if(authorId !== req.loggedInUser) return res.status(403).send({status: false, msg: "Not Authorized !!!"})
+    }
+
+    if(!authorId) filters.authorId=req.loggedInUser
 
     let ub = await BlogsModel.updateMany(filters,{ isDeleted: true, DeletedAt: new Date() })
 
