@@ -2,11 +2,11 @@ const express = require("express")
 const router = express.Router()
 const authorControllers = require("../Controllers/AuthorController")
 const BlogControllers = require("../Controllers/BlogController")
-const{authentication,authorization} = require("../Middlewares/commonMiddleware")
+const{ authentication , authorization } = require("../Middlewares/commonMiddleware")
 
 // API to create new author
 
-router.post("/authors",authorControllers.authors)
+router.post("/authors", authorControllers.authors)
 
 // API for Author Login
 
@@ -30,6 +30,6 @@ router.delete("/blogs/:blogId", authentication , authorization , BlogControllers
 
 // API to delete blogs with query params
 
-router.delete("/blogs", authentication,authorization, BlogControllers.deBlogsQ)
+router.delete("/blogs", authentication , authorization , BlogControllers.deBlogsQ)
 
 module.exports = router
