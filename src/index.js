@@ -1,11 +1,10 @@
 const express = require("express")
 const app = express()
-const bodyParser = require("body-parser")
 const { default: mongoose } = require('mongoose')
 const route = require("./routes/route")
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(express.json()) //express has inbuilt function to parse data
+
 
 mongoose.connect("mongodb+srv://AbhinavSIngh:9936522959@cluster0.wtmx5b4.mongodb.net/bloggingdb"
 ,{

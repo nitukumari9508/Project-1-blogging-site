@@ -6,11 +6,13 @@ const createBlog = async function(req, res){
 try {
     
     let data = req.body
-    let authorId = req.body.authorId
-    let { title , body , tags , category , subcategory } = req.body
-
-    if(!title || !body || !tags || !category || !subcategory) return res.status(400).send({status: false , msg: "All fields are mandatory."})
-
+    let { title , body , tags , category , subcategory, authorId } = req.body
+ 
+    if(!title) return res.status(400).send({status: false , msg: "title is required."})
+    if(!body) return res.status(400).send({status: false , msg: "body is required."})
+    if(!tags) return res.status(400).send({status: false , msg: "tags is required."})
+    if(!category) return res.status(400).send({status: false , msg: "category is required."})
+    if(!subcategory) return res.status(400).send({status: false , msg: "subcategory is required."})
     if(!authorId) return res.status(400).send({status: false , msg: "AuthorId is required."})
 
     let isValidAuthorId = isValidObjectId(authorId)
@@ -35,6 +37,12 @@ const getBlogs = async function(req,res) {
         
     let filters=req.query
 
+    let{authorId}=filters
+
+    let isValidAuthorId = isValidObjectId(authorId)
+
+    if(!isValidAuthorId) return res.status(400).send({status: false , msg: "AuthorId is not a valid ObjectId."})
+
     filters.isDeleted = false
     filters.ispublished = true
     
@@ -56,6 +64,10 @@ const updateBlogs = async function(req,res){
 
     if(!blogId) return res.send.status(400).send({ status : false , msg : "BlogId is required." })
 
+    let isValidBlogId = isValidObjectId(blogId)
+
+    if(!isValidBlogId) return res.status(400).send({status: false , msg: "BlogId is not a valid ObjectId."})
+
     let isavailable = await BlogsModel.findOne({_id : blogId , isDeleted : false})
 
     if(!isavailable) return res.status(404).send({ status : false , msg : "Blog is not available." })
@@ -63,7 +75,7 @@ const updateBlogs = async function(req,res){
     let updatedData = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set:  { publishedAt : new Date() } , ispublished : true , title : title ,  body : body  , category : category ,  $push: { tags : tags , subcategory : subcategory}   } , { new : true })
 
     res.status(200).send({ status : true , data : updatedData })
-} catch (err) {
+}   catch (err) {
     res.status(500).send({ status : false , msg : err.message })
 }
 }
@@ -75,6 +87,10 @@ try {
     let blogId = req.params.blogId
 
     if(!blogId) return res.status(400).send({ status : false , msg : "BlogId is required." })
+
+    let isValidBlogId = isValidObjectId(blogId)
+
+    if(!isValidBlogId) return res.status(400).send({status: false , msg: "BlogId is not a valid ObjectId."})
 
     let isavailable = await BlogsModel.findOne({_id : blogId , isDeleted : false})
 
@@ -91,20 +107,16 @@ try {
 
 const deBlogsQ = async function (req, res) {
     try {
-        let id = req.loggedInUser
         let filters = req.query
-
+        filters.authorId=req.loggedInUser
         if((Object.keys(filters)).length == 0) return res.status(400).send({ status : false , msg : "filters are required." })
 
-        let ub = await BlogsModel.updateMany({_id : id ,filters},{ isDeleted: true, DeletedAt: new Date() })
+        let ub = await BlogsModel.updateMany(filters,{ isDeleted: true, DeletedAt: new Date() })
         
         if (!ub) { return res.status(404).send({ status: false, msg: "not found" }) }
         res.status(200).send({ msg: "Blog Deleted." })
     } catch (err) { res.status(500).send({ status : false , msg : err.message }) }
 }
 
-module.exports.deBlogsQ = deBlogsQ
-module.exports.getBlogs = getBlogs
-module.exports.createBlog = createBlog
-module.exports.updateBlogs = updateBlogs
-module.exports.deleteBlog = deleteBlog
+module.exports ={createBlog,getBlogs,updateBlogs,deleteBlog,deBlogsQ} 
+
