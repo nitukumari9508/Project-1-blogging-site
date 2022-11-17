@@ -41,9 +41,10 @@ const getBlogs = async function(req,res) {
 
     let{authorId}=filters
 
-    let isValidAuthorId = isValidObjectId(authorId)
-
-    if(!isValidAuthorId) return res.status(400).send({status: false , msg: "AuthorId is not a valid ObjectId."})
+    if(authorId){
+        let isValidAuthorId = isValidObjectId(authorId)
+        if(!isValidAuthorId) return res.status(400).send({status: false , msg: "AuthorId is not a valid ObjectId."})
+    }
 
     filters.isDeleted = false
     filters.ispublished = true
@@ -122,7 +123,7 @@ const deBlogsQ = async function (req, res) {
 
     if (!ub) return res.status(404).send({ status: false, msg: "not found" })
 
-    res.status(200).send({ msg: "Blog Deleted." })
+    res.status(200).send({ status : true , msg : "Blog Deleted." })
 
 } catch (err){ 
     res.status(500).send({ status : false , msg : err.message })

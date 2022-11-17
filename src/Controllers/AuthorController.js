@@ -28,6 +28,10 @@ try {
 
     if (!isValidPassword.test(password)) return res.status(400).send({ status: false, message: "Invalid password" })
 
+    let isEmailInUse = await authorModel.findOne( {Email : Email} )
+
+    if(isEmailInUse) return res.status(400).send({ status: false, message: "Email Id already in use." })
+
     const result = await authorModel.create(data)
     res.status(201).send({ status : true , data : result })
 

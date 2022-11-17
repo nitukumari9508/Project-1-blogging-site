@@ -27,7 +27,9 @@ const authorization = async function(req , res , next){
     try{
 
     let blogId = req.params.blogId
-    let authorId = (req.body.authorId || req.query)
+    let authorId = req.body.authorId
+
+    if(req.query.authorId == undefined) return next()
 
     if(blogId){
         let user = await blogModel.findById(blogId)
