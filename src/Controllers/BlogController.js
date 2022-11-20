@@ -99,7 +99,7 @@ const deleteBlog = async function(req,res){
 
     if(!isAvailable) return res.status(404).send({ status : false , msg : "Blog is not available." })
 
-    if(isAvailable.isDeleted === true) return res.status(404).send({ status : false , msg : "Blog is already deleted." })
+    if(isAvailable.isDeleted === true) return res.status(200).send({ status : true , msg : "Blog is already deleted." })
 
     let deletedBlog = await BlogsModel.findOneAndUpdate({ _id : blogId , isDeleted : false } , { $set : {isDeleted : true , deletedAt : new Date() , isPublished : false}} , { new : true } )
 
@@ -130,7 +130,7 @@ const deBlogsQ = async function (req, res) {
 
     if(!authorId) filters.authorId=req.loggedInUser
 
-    let ub = await BlogsModel.updateMany(filters,{ isDeleted: true , DeletedAt: new Date() , isPublished : false })
+    let ub = await BlogsModel.updateMany(filters,{ isDeleted: true , deletedAt: new Date() , isPublished : false })
 
     if (!ub) return res.status(404).send({ status: false, msg: "Blog is not available." })
 

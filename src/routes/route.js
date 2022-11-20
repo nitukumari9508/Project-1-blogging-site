@@ -18,7 +18,7 @@ router.post("/blogs", authentication , authorization , BlogControllers.createBlo
 
 // API to find blogs
 
-router.get("/getBlogs", authentication , BlogControllers.getBlogs)
+router.get("/blogs", authentication , BlogControllers.getBlogs)
 
 // API to update blogs
 
