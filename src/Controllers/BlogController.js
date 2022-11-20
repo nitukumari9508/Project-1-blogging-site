@@ -45,7 +45,7 @@ const getBlogs = async function(req,res) {
     }
 
     filters.isDeleted = false
-    filters.ispublished = true
+    filters.isPublished = true
 
     let data = await BlogsModel.find(filters)
     if(data.length==0) return res.status(404).send({status: false , msg: "Blog is not available."})

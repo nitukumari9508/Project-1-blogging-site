@@ -28,7 +28,7 @@ try {
 
     if (!isValidPassword.test(password)) return res.status(400).send({ status: false, message: "Please use a strong password including special characters." })
 
-    let isEmailInUse = await authorModel.findOne( {email : email} )
+    let isEmailInUse = await authorModel.findOne({email})
 
     if(isEmailInUse) return res.status(400).send({ status: false, message: "Email Id already in use." })
 
