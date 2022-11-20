@@ -7,28 +7,28 @@ const authors = async function (req, res) {
 try {
 
     const data = req.body
-    const {firstname , lastname , title , Email , password} = req.body
+    const {fname , lname , title , email , password} = req.body
 
-    if(!firstname) return res.status(400).send({ status: false, message: "Firstname is required." })
-    if(!lastname) return res.status(400).send({ status: false, message: "Lastname is required." })
+    if(!fname) return res.status(400).send({ status: false, message: "Firstname is required." })
+    if(!lname) return res.status(400).send({ status: false, message: "Lastname is required." })
     if(!title) return res.status(400).send({ status: false, message: "Title is required." })
-    if(!Email) return res.status(400).send({ status: false, message: "Email is required." })
+    if(!email) return res.status(400).send({ status: false, message: "Email is required." })
     if(!password) return res.status(400).send({ status: false, message: "Password is required." })
 
     const validName = (/^[a-zA-Z .]{3,20}$/)
-    const isValidPassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,12}$/)
+    const isValidPassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,12}$/)
 
-    if (!validName.test(firstname)) return res.status(400).send({ status: false, message: "Invalid firstname." })
+    if (!validName.test(fname)) return res.status(400).send({ status: false, message: "Invalid firstname." })
 
-    if (!validName.test(lastname)) return res.status(400).send({ status: false, message: "Invalid lastname." })
+    if (!validName.test(lname)) return res.status(400).send({ status: false, message: "Invalid lastname." })
 
     if (!(["Mr", "Mrs", "Miss"].includes(title))) return res.status(400).send({status: false, msg: "You can use only Mr, Mrs & Miss in title."})
 
-    if (!emailValidator.validate(Email)) return res.status(400).send({ status: false, message: "Invalid Email Id." })
+    if (!emailValidator.validate(email)) return res.status(400).send({ status: false, message: "Invalid Email Id." })
 
-    if (!isValidPassword.test(password)) return res.status(400).send({ status: false, message: "Invalid password" })
+    if (!isValidPassword.test(password)) return res.status(400).send({ status: false, message: "Please use a strong password including special characters." })
 
-    let isEmailInUse = await authorModel.findOne( {Email : Email} )
+    let isEmailInUse = await authorModel.findOne( {email : email} )
 
     if(isEmailInUse) return res.status(400).send({ status: false, message: "Email Id already in use." })
 
@@ -44,14 +44,14 @@ const authorLogin = async function(req,res){
 
 try{
 
-    let userId = req.body.Email
+    let userId = req.body.email
     let password = req.body.password
 
     if(!userId || !password) return res.status(400).send({status : false , msg : "Please enter your UserId and Password !!!"})
 
     if(!emailValidator.validate(userId)) return res.status(400).send({status : false , msg : "Email id is invalid"})
 
-    let user = await authorModel.findOne({ Email : userId , password : password })
+    let user = await authorModel.findOne({ email : userId , password : password })
 
     if(!user) return res.status(404).send({status : false , msg : "UserId or Password is incorrect !!!"})
 

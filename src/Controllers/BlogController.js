@@ -11,9 +11,7 @@ const createBlog = async function(req, res){
 
     if(!title) return res.status(400).send({status: false , msg: "title is required."})
     if(!body) return res.status(400).send({status: false , msg: "body is required."})
-    if(!tags) return res.status(400).send({status: false , msg: "tags is required."})
     if(!category) return res.status(400).send({status: false , msg: "category is required."})
-    if(!subcategory) return res.status(400).send({status: false , msg: "subcategory is required."})
     if(!authorId) return res.status(400).send({status: false , msg: "AuthorId is required."})
 
     let isValidAuthorId = isValidObjectId(authorId)
@@ -76,7 +74,7 @@ const updateBlogs = async function(req,res){
 
     if(!isavailable) return res.status(404).send({ status : false , msg : "Blog is not available." })
 
-    let updatedData = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set:  { publishedAt : new Date() } , ispublished : true , title : title ,  body : body  , category : category ,  $push: { tags : tags , subcategory : subcategory}   } , { new : true })
+    let updatedData = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set:  { publishedAt : new Date() } , isPublished : true , title : title ,  body : body  , category : category ,  $push: { tags : tags , subcategory : subcategory}   } , { new : true })
 
     res.status(200).send({ status : true , data : updatedData })
 
@@ -97,11 +95,13 @@ const deleteBlog = async function(req,res){
 
     if(!isValidBlogId) return res.status(400).send({status: false , msg: "BlogId is not a valid ObjectId."})
 
-    let isavailable = await BlogsModel.findOne({_id : blogId , isDeleted : false})
+    let isAvailable = await BlogsModel.findById(blogId)
 
-    if(!isavailable) return res.status(404).send({ status : false , msg : "Blog is not available." })
+    if(!isAvailable) return res.status(404).send({ status : false , msg : "Blog is not available." })
 
-    let deletedBlog = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set : {isDeleted : true , DeletedAt : new Date()}} , { new : true } )
+    if(isAvailable.isDeleted === true) return res.status(404).send({ status : false , msg : "Blog is already deleted." })
+
+    let deletedBlog = await BlogsModel.findOneAndUpdate({ _id : blogId , isDeleted : false } , { $set : {isDeleted : true , deletedAt : new Date() , isPublished : false}} , { new : true } )
 
     res.status(200).send({ status : true , data : deletedBlog })
 
@@ -121,14 +121,18 @@ const deBlogsQ = async function (req, res) {
     let { authorId } = filters
 
     if(authorId) {
+        let isValidAuthorId = isValidObjectId(authorId)
+
+        if(!isValidAuthorId) return res.status(400).send({status: false , msg: "AuthorId is not a valid ObjectId."})
+
         if(authorId !== req.loggedInUser) return res.status(403).send({status: false, msg: "Not Authorized !!!"})
     }
 
     if(!authorId) filters.authorId=req.loggedInUser
 
-    let ub = await BlogsModel.updateMany(filters,{ isDeleted: true, DeletedAt: new Date() })
+    let ub = await BlogsModel.updateMany(filters,{ isDeleted: true , DeletedAt: new Date() , isPublished : false })
 
-    if (!ub) return res.status(404).send({ status: false, msg: "not found" })
+    if (!ub) return res.status(404).send({ status: false, msg: "Blog is not available." })
 
     res.status(200).send({ status : true , msg : "Blog Deleted." })
 

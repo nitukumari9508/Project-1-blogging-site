@@ -29,14 +29,25 @@ const authorization = async function(req , res , next){
     let blogId = req.params.blogId
     let authorId = req.body.authorId
 
+    if(authorId){
+        let isValidAuthorId = isValidObjectId(authorId)
+
+        if(!isValidAuthorId) return res.status(400).send({status: false , msg: "AuthorId is not a valid ObjectId."})
+    }
+
     if(blogId){
+        let isValidBlogId = isValidObjectId(blogId)
+
+        if(!isValidBlogId) return res.status(400).send({status: false , msg: "BlogId is not a valid ObjectId."})
+
         let user = await blogModel.findById(blogId)
-        if(!user){return res.status(400).send({status: false, msg: "Blog id is invalid!"})}
+
+        if(!user){return res.status(400).send({status: false, msg: "Blog is not available !"})}
+
         authorId = user.authorId.toString()
     }
 
     if( authorId !== req.loggedInUser ){
-        console.log(req.loggedInUser)
         return res.status(403).send({status: false, msg: "Not Authorized !!!"})
     } 
     next()
