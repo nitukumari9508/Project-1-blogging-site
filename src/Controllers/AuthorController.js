@@ -44,14 +44,15 @@ const authorLogin = async function(req,res){
 
 try{
 
-    let userId = req.body.email
-    let password = req.body.password
+    //let userId = req.body.email
+    //let password = req.body.password
+    const {email,password}= req.body
 
-    if(!userId || !password) return res.status(400).send({status : false , msg : "Please enter your UserId and Password !!!"})
+    if(!email || !password) return res.status(400).send({status : false , msg : "Please enter your UserId and Password !!!"})
 
-    if(!emailValidator.validate(userId)) return res.status(400).send({status : false , msg : "Email id is invalid"})
+    if(!emailValidator.validate(email)) return res.status(400).send({status : false , msg : "Email id is invalid"})
 
-    let user = await authorModel.findOne({ email : userId , password : password })
+    let user = await authorModel.findOne({ email : email , password : password })
 
     if(!user) return res.status(404).send({status : false , msg : "UserId or Password is incorrect !!!"})
 
