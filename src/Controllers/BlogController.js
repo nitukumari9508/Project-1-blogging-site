@@ -74,7 +74,9 @@ const updateBlogs = async function(req,res){
 
     if(!isavailable) return res.status(404).send({ status : false , msg : "Blog is not available." })
 
-    let updatedData = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set:  { publishedAt : new Date() } , isPublished : true , title : title ,  body : body  , category : category ,  $push: { tags : tags , subcategory : subcategory}   } , { new : true })
+    let updatedData = await BlogsModel.findOneAndUpdate({ _id : blogId } , { $set:  { publishedAt : new Date() } ,
+     isPublished : true , title : title ,  body : body  , category : category , 
+      $push: { tags : tags , subcategory : subcategory}   } , { new : true })
 
     res.status(200).send({ status : true , data : updatedData })
 

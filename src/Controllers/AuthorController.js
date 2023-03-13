@@ -7,7 +7,7 @@ const authors = async function (req, res) {
 try {
 
     const data = req.body
-    const {fname , lname , title , email , password} = req.body
+    const {fname , lname , title , email , password} = data
 
     if(!fname) return res.status(400).send({ status: false, message: "Firstname is required." })
     if(!lname) return res.status(400).send({ status: false, message: "Lastname is required." })
@@ -30,7 +30,7 @@ try {
 
     let isEmailInUse = await authorModel.findOne({email})
 
-    if(isEmailInUse) return res.status(400).send({ status: false, message: "Email Id already in use." })
+    if(isEmailInUse) return res.status(409).send({ status: false, message: "Email Id already in use." })
 
     const result = await authorModel.create(data)
     res.status(201).send({ status : true , data : result })
@@ -48,13 +48,13 @@ try{
     //let password = req.body.password
     const {email,password}= req.body
 
-    if(!email || !password) return res.status(400).send({status : false , msg : "Please enter your UserId and Password !!!"})
+    if(!email || !password) return res.status(400).send({status : false , msg : "Please enter your email and Password !!!"})
 
     if(!emailValidator.validate(email)) return res.status(400).send({status : false , msg : "Email id is invalid"})
 
-    let user = await authorModel.findOne({ email : email , password : password })
+    let user = await authorModel.findOne({  email , password })
 
-    if(!user) return res.status(404).send({status : false , msg : "UserId or Password is incorrect !!!"})
+    if(!user) return res.status(404).send({status : false , msg : "email or Password is incorrect !!!"})
 
     let token = jwt.sign({authorId : user._id.toString()} , "my-secret-key")
 

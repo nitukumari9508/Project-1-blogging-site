@@ -12,7 +12,7 @@ const authentication = function (req, res, next) {
 
     jwt.verify(token, "my-secret-key", function (err, decodedToken) {
         if (err) return res.status(401).send({ status: false, msg: "token is invalid" })
-        console.log(decodedToken)
+        
         req.loggedInUser = decodedToken.authorId
         console.log(req.loggedInUser)
         next()
